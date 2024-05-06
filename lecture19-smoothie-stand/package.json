@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "graphql-tools": "^4.0.8",
-    "lodash-es": "^4.17.21",
-    "passport-custom": "^1.1.1",
-    "vue-property-decorator": "^9.1.2",
-    "vuex-class": "^0.3.2"
-  }
-}
