@@ -1,0 +1,45 @@
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - create
+  - deploy
+  - test
+
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - cd lecture19-smoothie-stand/server
+    - docker build -t lecture19-smoothie-stand-server .
+    - cd ../..
+    # - docker rmi lecture19-smoothie-stand-ui
+    - cd lecture19-smoothie-stand/ui
+    - docker build -t lecture19-smoothie-stand-ui .
+    - cd ../..
+
+create-job:      # This job runs in the deploy stage.
+  stage: create  # It only runs when *both* jobs in the test stage complete successfully.
+  environment: production
+  allow_failure: true
+  script:
+    - cd lecture19-smoothie-stand
+    - kubectl delete -f k8s/
+
+    
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  environment: production
+  script:
+    - cd lecture19-smoothie-stand
+    - kubectl create -f k8s/
+    - cd ../..
+    
+unit-test-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    # - kubectl port-forward service/db 27017:27017
+    - cd lecture19-smoothie-stand/playwrite
+    - npm install
+    # - DISABLE_SECURITY=alpha-beta-delta npx playwright test
+    - npx playwright test
+    - cd ../..

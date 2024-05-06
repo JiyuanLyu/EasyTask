@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ui
+  name: ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+      - image: lecture19-smoothie-stand-ui
+        name: ui
+        # 不能always 因为我一直用本地的
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: ui
